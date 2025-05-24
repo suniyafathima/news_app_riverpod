@@ -1,18 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app/presentation/savedscreen/controller/savedscreencontroller.dart';
-import 'package:news_app/sqflite_class/news_db.dart';
+
 
 class SavedScreen extends ConsumerStatefulWidget {
   const SavedScreen({super.key});
-
   @override
   ConsumerState<SavedScreen> createState() => _SavedScreenState();
 }
 
 class _SavedScreenState extends ConsumerState<SavedScreen> {
-
-   
   @override
    Widget build(BuildContext context) {
 final savedArticles = ref.watch(savedNewsProvider);
@@ -35,19 +33,14 @@ final savedArticles = ref.watch(savedNewsProvider);
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-         Image.network(
-  savedArticles[index]['url'] ?? "",
-  width: 100,
-  height: 80,
-  fit: BoxFit.cover,
-  errorBuilder: (context, error, stackTrace) => Container(
-    width: 100,
-    height: 80,
-    color: Colors.grey[300],
-    child: Icon(Icons.broken_image),
-  ),
-),
+        children: [       
+        CachedNetworkImage(
+          imageUrl: savedArticles[index]['urlToImage'] ?? "",
+          width: 100,
+          height: 80,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => Icon(Icons.broken_image),
+          ),
 
           SizedBox(width: 12),
           Expanded(
@@ -75,7 +68,7 @@ final savedArticles = ref.watch(savedNewsProvider);
           ),
           SizedBox(width: 8),
          // Icon(Icons.bookmark, color: Colors.black),
-       IconButton(
+                    IconButton(
                         icon: Icon(Icons.bookmark, color: Colors.black),
                         onPressed: () async {
                           final url = savedArticles[index]['url'];

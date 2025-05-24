@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/repository/api/news_screen/news_res_model.dart';
@@ -30,13 +29,6 @@ class NewsDetails extends StatelessWidget {
             if (article.urlToImage != null && article.urlToImage!.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-              //   CachedNetworkImage(
-//   imageUrl: article.urlToImage ?? "",
-//   width: 100,
-//   height: 100,
-//   fit: BoxFit.cover,
-//   placeholder: (context, url) => CircularProgressIndicator(),
-//   errorWidget: (context, url, error) => Icon(Icons.broken_image),
                 child: CachedNetworkImage(
                   imageUrl: article.urlToImage!,
                   fit: BoxFit.cover,
@@ -91,21 +83,35 @@ class NewsDetails extends StatelessWidget {
                 article.content!,
                 style: TextStyle(fontSize: 15),
               ),
-              TextButton(
-              onPressed: () async {
-              final url = article.url;
-              if (url != null) {
-              final uri = Uri.parse(url);
-              if (await canLaunchUrl(uri)) {
-               await launchUrl(uri);
-              } else {
-              log("Could not launch $url");
-            }
-           }
-          },
-          child: Text("Read More"),
-          ),
+           TextButton(
+  onPressed: () async {
+    final url = article.url;
 
+    if (url == null || url.isEmpty) {
+      debugPrint("❌ No URL provided.");
+      return;
+    }
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      debugPrint("❌ Invalid URI: $url");
+      return;
+    }
+
+    debugPrint("🔗 Attempting to open in Chrome: $url");
+
+    try {
+      final launched = await launchUrl(uri);
+
+      debugPrint(launched
+          ? "✅ URL launch successful"
+          : "❌ URL launch failed");
+    } catch (e) {
+      debugPrint("🚨 Exception launching URL: $e");
+    }
+  },
+  child: const Text("Read More"),
+)
           ],
         ),
       ),

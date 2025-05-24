@@ -155,31 +155,13 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                                children: [
                                  // Image
                                  ClipRRect(
-                                   borderRadius: BorderRadius.circular(8),
-//                                    CachedNetworkImage(
-//   imageUrl: article.urlToImage ?? "",
-//   width: 100,
-//   height: 100,
-//   fit: BoxFit.cover,
-//   placeholder: (context, url) => CircularProgressIndicator(),
-//   errorWidget: (context, url, error) => Icon(Icons.broken_image),
-// )
-
                                    child: CachedNetworkImage(
                                     imageUrl: screenstate.categoryArticles![index].urlToImage ?? "",
                                      width: 100,
                                      height: 100,
                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) => CircularProgressIndicator(),
+                                     // placeholder: (context, url) => CircularProgressIndicator(),
                                       errorWidget: (context, url, error) => Icon(Icons.broken_image),
-                                    //  errorBuilder: (context, error, stackTrace) =>
-                                    //      Container(
-                                    //    width: 100,
-                                    //    height: 100,
-                                    //    color: Colors.grey[300],
-                                    //    child:
-                                    //     Icon(Icons.image, color: Colors.grey),
-                                    //  ),
                                    ),
                                  ),
                                  SizedBox(width: 12),
@@ -225,7 +207,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
           title: article.title,
           description: article.description,
           urlToImage: article.urlToImage,
-          publishedAt: article.publishedAt?.toIso8601String(),
+          publishedAt: article.publishedAt.toString(),
           content: article.content,
           url: article.url,
         );
@@ -274,14 +256,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
       padding: EdgeInsets.all(16),
       height: 200,
       decoration: BoxDecoration(
-        //                                    CachedNetworkImage(
-//   imageUrl: article.urlToImage ?? "",
-//   width: 100,
-//   height: 100,
-//   fit: BoxFit.cover,
-//   placeholder: (context, url) => CircularProgressIndicator(),
-//   errorWidget: (context, url, error) => Icon(Icons.broken_image),
-// )
+
         image: DecorationImage(
           image: CachedNetworkImageProvider(
             article.urlToImage ?? "",
