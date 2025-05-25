@@ -1,35 +1,42 @@
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-import 'package:news_app/presentation/search_screen/state/search_screen_state.dart';
-import 'package:news_app/repository/api/news_screen/news_res_model.dart';
+import 'package:news_app/core/services/news_api_service.dart';
 
-final searchScreenProvider = StateNotifierProvider((ref) {
+import 'package:news_app/presentation/search_screen/state/search_screen_state.dart';
+
+final searchScreenProvider = StateNotifierProvider<SearchScreenController, SearchScreenState>((ref) {
   return SearchScreenController();
 });
 
 class SearchScreenController extends StateNotifier<SearchScreenState> {
+  final NewsApiService newsApiService = NewsApiService();
+
   SearchScreenController() : super(SearchScreenState());
 
   Future<void> fetchSearchResults(String query) async {
     state = state.copyWith(isLoading: true);
-    try {
-      final response = await http.get(Uri.parse(
-          'https://newsapi.org/v2/everything?q=$query&sortBy=popularity&apiKey=3aeeb62a8c5b4471af0f71e9e8f1b21b'));
 
-      if (response.statusCode == 200) {
-        final resModel = newsResModelFromJson(response.body);
+    try {
+      final resModel = await NewsApiService().searchNews(query);
+
+      if (resModel != null && resModel.articles!.isNotEmpty) {
         state = state.copyWith(
           isLoading: false,
           searchResults: resModel.articles,
         );
       } else {
-        log("Failed: ${response.statusCode}");
+        state = state.copyWith(
+          isLoading: false,
+          searchResults: [],
+  
+        );
       }
     } catch (e) {
       log("Error: $e");
-    } finally {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(
+        isLoading: false,
+    
+      );
     }
   }
 }

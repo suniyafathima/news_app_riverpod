@@ -15,7 +15,7 @@ class DiscoverScreenController extends StateNotifier<DiscoverScreenState> {
       await Future.delayed(Duration(seconds: 2));
       state = state.copyWith(
         isLoading: false,
-        topHeadlines: [], // Replace with actual data
+        topHeadlines: [], 
       );
     } catch (e) {
       state = state.copyWith(isLoading: false);

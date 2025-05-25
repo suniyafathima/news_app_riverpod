@@ -110,7 +110,7 @@ class NewsDetails extends StatelessWidget {
       debugPrint("🚨 Exception launching URL: $e");
     }
   },
-  child: const Text("Read More"),
+  child: Text("Read More"),
 )
           ],
         ),

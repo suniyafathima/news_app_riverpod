@@ -32,4 +32,20 @@ class NewsApiService {
     }
     return null;
   }
+
+
+ Future<NewsResModel?> searchNews(String query) async {
+    final response = await ApiHelper.getData(
+      endpoint: "/v2/everything?q=$query&sortBy=popularity&apiKey=${AppConfig.apiKey}",
+    );
+
+    if (response != null) {
+      try {
+        return newsResModelFromJson(response);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
 }
